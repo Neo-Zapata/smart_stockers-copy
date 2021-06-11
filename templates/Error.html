@@ -1,0 +1,14 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="{{ url_for('static',filename='styles/stylesheet.css')}}">
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap">
+    </head>
+    <body>
+        <div class="moves">
+            <img src="../static/img/error.jpg">
+            <h3>Ha ocurrido un error fatal.<br> Aqui la descripcion: </h3>
+            {{err}}
+        </div>
+        <a href="/home">Volver</a>
+    </body>
+</html>

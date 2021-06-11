@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Stock</title>
+<!--	<link rel="stylesheet" href="{{ url_for('static',filename='styles/stylesheet.css')}}">
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap">
+		<link rel="preconnect" href="https://fonts.gstatic.com">
+		<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet"> 
+		<link rel="stylesheet" href="{{ url_for('static',filename='styles/menu.css')}}">
+-->
+		<style>
+		table, th, td {
+	  	border: 1px solid black;
+		}
+		</style>
+	</head>
+	<body>
+		<header>
+			<ul id="bimd">
+				<li>
+					<a title="Regresar al Inicio" href="/home">Home</a>
+				</li>
+				<li>
+					<a title="Ir a Agregar" href="/agregar">Agregar</a>
+				</li>
+				<li>
+					<a title="Ir a Consumir" href="/consumir">Consumir</a>
+				</li>
+				<li style="border-right: none; float:right">
+					<a title="Cerrar sesion" href="{{url_for('logout')}}">Cerrar Sesion</a>
+				</li>
+			</ul>
+		</header>
+		<div>
+			{% with messages = get_flashed_messages() %}
+				{% if messages %}
+					{% for msg in messages %}
+						<p>{{ msg }}</p>
+					{% endfor %}
+				{% endif %}
+			{% endwith %}
+		</div>
+		<div class="matter">
+			<h1>Ver Stock</h1>
+			<div class="continental">
+				<fieldset>
+					<legend>Todos los items registrados:</legend> 
+					<div>
+						<table style="width:100%">
+							<tr>
+							  <th>Codigo</th>
+							  <th>Producto</th>
+							  <th>Categoria</th>
+							  <th>Ubicacion</th>
+							  <th>Precio</th>
+							  <th>Vencimiento</th>
+							</tr>
+							{% for item in stock %}
+							<tr>
+							  <td>{{item.Codigo}}</td>
+							  <td>{{item.Producto}}</td>
+							  <td>{{item.Categoria}}</td>
+							  <td>{{item.Ubicacion}}</td>
+							  <td>{{item.Precio}}</td>
+							  <td>{{item.Vencimiento}}</td>
+							</tr>
+							{% endfor %}
+						  </table>
+						  
+					</div>
+				</fieldset>
+			</div>
+			<div class="continental">
+				<fieldset>
+					<legend>Buscar por:(No es obligatoria llenar todos los campos)</legend> 
+					<br> 
+					<form action="/mostrar_stock" method="POST">
+						<div class="comple">
+							<label for="codigo" > Codigo: </label>
+							<input id="codigo" type="text" name="ver_codigo"/>
+							<label for="precio"> Precio: </label>
+							<input id="precio" type="text" name="ver_precio"/>
+							<label for="producto"> Producto: </label>
+							<input id="producto" type="text" name="ver_producto"/>
+					<!--		<label for="vencimiento"> Vencimiento </label>
+							<input id="vencimiento" type="text" name="ver_vencimiento"/>
+					-->
+							<label for="categoria"> Categoria </label>
+							<input id="categoria" type="text" name="ver_categoria"/>
+							<label for="ubicacion"> Ubicacion </label>
+							<input id="ubicacion" type="text" name="ver_ubicacion"/>
+						</div>
+						<input type="submit" value="Submit"/>
+					</form>
+					<div>
+						<ul class="manolo">
+							{% for item in stockFiltered %}
+								<li>{{item.Codigo}} {{item.Producto}} {{item.Categoria}} {{item.Ubicacion}} {{item.Precio}} | {{item.Vencimiento}} </li>
+							{% endfor %}
+						</ul>
+					</div>
+				</fieldset>
+			</div>
+		</div>
+		
+	</body>
+</html>

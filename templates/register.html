@@ -1,0 +1,45 @@
+<html>
+    <head>
+<!--    <link rel="stylesheet" href="{{ url_for('static',filename='styles/stylesheet2.css')}}">
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap">
+-->
+    </head>
+    <body>
+        <div class="seri">
+            <div class="noma">
+                <form action="/signup" method="POST">
+                    <div class="perri">
+                        <label for="username">Username: </label> 
+                        <input id="username" name="username" type="text"/> 
+                    </div>
+                    
+                    <div class="perri">
+                        <label for="e-mail">E-mail: </label> 
+                        <input for="e-mail" name="mail" type="email"/>
+                    </div>
+                    
+                    <div class="perri">
+                        <label for="password">Contraseña: </label>	
+                        <input id="password" name="password" type="text" /> 
+                    </div>
+                    
+                    <div class="perri">
+                        <input type="submit" value="Submit"/>
+                        <!--Al darle a submit te lleva a iniciar sesion, este boton deberia ser en caso no quiera registrarte-->
+                        <a title="Volver" href="/">Volver</a>
+                    </div>
+                    <div>
+                        {% with messages = get_flashed_messages() %}
+                            {% if messages %}
+                                {% for msg in messages %}
+                                    <p>{{ msg }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        {% endwith %}
+                    </div>
+                    
+                </form>
+            </div>
+        </div>
+    </body>
+</html>

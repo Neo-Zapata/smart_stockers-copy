@@ -1,0 +1,41 @@
+<html>
+    <head>
+<!--    <link rel="stylesheet" href="{{ url_for('static',filename='styles/stylesheet2.css') }}">
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap">
+-->
+    </head>
+    <body>
+        <!--Los div son para los styles de CSS-->
+        <div class="seri">
+            <div class="noma">
+                <form action="/signin" method="POST">
+                    <div class="perri">
+                        <!--EL for del label es para hacer un bound y, se introduce el id (el cual no hay)-->
+                        <label for="e-mail">E-mail: </label> 
+                        <input id="e-mail" name="mail" type="email"/>
+                    </div>
+                     
+                    <div class="perri">
+                        <label for="password">Contraseña: </label>	
+                        <input id="password" name="password" type="text" /> 
+                    </div>
+                    
+                    <div class="perri">
+                        <input type="submit" value="Submit"/>
+                        <!--Title es el nombre cuando el cursor esta por encima-->
+                        <a title="Registrarse" href="/registro">Registrate</a>
+                    </div>
+                </form>
+            </div>
+            <div>
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        {% for msg in messages %}
+                            <p>{{ msg }}</p>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            </div>
+        </div>
+    </body>
+</html>

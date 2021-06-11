@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Consumir</title>
+<!--	<link rel="stylesheet" href="{{ url_for('static',filename='styles/stylesheet.css')}}">
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap">
+		<link rel="stylesheet" href="{{ url_for('static',filename='styles/menu.css')}}">
+-->
+	</head>
+	<body>
+		<header>
+			<ul id="bimd">
+				<li>
+					<a title="Regresar al Inicio" href="/home">Home</a>
+				</li>
+				<li>
+					<a title="Ir a Agregar" href="/agregar">Agregar</a>
+				</li>
+				<li>
+					<a title="Ver Stock" href="/stock">Ver Stock</a>
+				</li>
+				<li style="border-right: none;
+				float:right">
+					<a title="Cerrar sesion" href="{{url_for('logout')}}">Cerrar Sesion</a>
+				</li>
+			</ul>
+		</header>
+		<div>
+			{% with messages = get_flashed_messages() %}
+				{% if messages %}
+					{% for msg in messages %}
+						<p>{{ msg }}</p>
+					{% endfor %}
+				{% endif %}
+			{% endwith %}
+		</div>
+		<h1>Consumir producto</h1>
+		<div class="rec">
+			<fieldset>
+				<legend>Consumir producto</legend>
+				<form action="/consumir_producto" method="POST">
+					<div class="soul">
+						<label for="cantidad">Cantidad</label>
+						 <input id="cantidad" name="cantidad" type="number"/> 
+					
+						 <label for="producto">Producto</label>
+						<input id="producto" name="producto" type="text"/> 
+						<!--
+						<label for="vencimiento">Vencimiento</label>
+						<input id="vencimiento" name="vencimiento" type="date" /> 	
+						-->	
+					</div>
+					<input type="submit" value="Submit"/>
+				</form>
+			</fieldset>
+		</div>
+	</body>
+</html>

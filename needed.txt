@@ -1,0 +1,21 @@
+1. Al agregar, modifica la tabla (+) 
+2. Al consumir, modifica la tabla (-)
+
+3. al darle a ver stock, poder ver todo de manera ordenada 
+
+Solo habra un tabla que guarde:
+cantidad, codigo, producto, categoria, ubicacion, precio, vencimiento
+
+AGREGAR
+Asegurarse que solo se pongan datos validos:
+en cantidad no puede haber numeros negativos
+codigo de cierta longitud
+quiza tener una lista de categorias y que no sea valido poner algo distinto a algun elemento de la lista
+precio no puede ser negativo y tiene que ser un float
+quiza fechas de vencimiento no menores al dia actual (una fecha de vencimiento del 2010)
+
+CONSUMIR
+la cantidad tiene que ser positiva y menor a la cantidad que ya tenemos 
+(si tenemos 20 y ponemos que consumimos 40 no puede salir en stock -20)
+Quiza mostrar el nombre de los productos y los codigos para que el usuario los ponga en producto.
+nsi se ingrese un producto que no esta dentro de la base de datos, error.
