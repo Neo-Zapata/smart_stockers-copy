@@ -16,8 +16,7 @@ El proyecto tiene como objetivo facilitar a los usuarios a que tengan el control
 ### Misión  📃
  
  
-Es la venta de una herramienta para que el usuario pueda ejecutarla en una computadora en desuso como un servidor local y que pueda acceder mediante una página web.
- 
+El software consiste en la venta de una herramienta para que el usuario pueda ejecutarla en una computadora en desuso como un servidor local y que pueda acceder mediante una página web. 
  
 ### Visión 👀
  
