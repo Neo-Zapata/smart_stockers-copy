@@ -6,7 +6,7 @@
 * **Marcelo Zapata** 
 * **Aaron Santamaria** 
  
-##Descripción del proyecto
+## Descripción del proyecto
 _Inventarios de alimentos para el hogar_
 ```
 Facilitar a los usuarios a que tengan el control y puedan recordar que productos tienen en sus hogares.
