@@ -16,15 +16,15 @@ Facilitar a los usuarios a que tengan el control y puedan recordar que productos
  
 ### Misión 
  
-```
+
 Es la venta de una herramienta para que el usuario pueda ejecutarla en una computadora en desuso como un servidor local y que pueda acceder mediante una página web.
-```
+
  
 ### VISION 
  
-```
+
 Que el usuario pueda también tener una aplicación en su celular que pueda escanear códigos de barras y tomar fotografía a los productos para que sea más fácil de utilizar la herramienta.
-```
+
  
  
 ## Tecnologias utilizadas 🛠️
