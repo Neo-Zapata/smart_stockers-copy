@@ -3,6 +3,7 @@ from flask import Flask, render_template, url_for, request, redirect,session
 from flask.helpers import flash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import and_, not_, or_
+from flask_migrate import Migrate
 
 
 
@@ -12,7 +13,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root@localhost/smartsto
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
-
+migrate = Migrate(app, db) #inicializar la migracion
 
 class Productos(db.Model):
     __tablename__ = 'productos'
@@ -35,7 +36,7 @@ class Cuentas(db.Model):
     password = db.Column(db.String(30), nullable=False, unique=True)
 
 
-db.create_all()
+#db.create_all()
 
 #1
 @app.route('/')
