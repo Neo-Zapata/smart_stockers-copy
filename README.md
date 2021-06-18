@@ -41,6 +41,6 @@ Ejecutar el archivo [proyecto.py](https://github.com/Neo-Zapata/smart_stockers-c
  
 ## Versionado 🗂️
  
-Usamos [Flask Migrate](https://flask-migrate.readthedocs.io/en/latest/) para el versionado. Para todas las versiones disponibles, mira las [versiones en este repositorio](https://github.com/tu/proyecto/migrations/versions).
+Usamos [Flask Migrate](https://flask-migrate.readthedocs.io/en/latest/) para el versionado. Para todas las versiones disponibles, mira las [versiones en este repositorio](https://github.com/Neo-Zapata/smart_stockers-copy/tree/master/migrations/versions).
  
 
