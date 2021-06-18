@@ -6,6 +6,12 @@
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap">
 		<link rel="stylesheet" href="{{ url_for('static',filename='styles/menu.css')}}">
 -->
+	<style>
+	table, th, td {
+	border: 1px solid black;
+	}
+	
+	</style>
 	</head>
 	<body>
 		<header>
@@ -54,5 +60,66 @@
 				</form>
 			</fieldset>
 		</div>
+		<div>
+			<fieldset>
+				<legend>Todos los items registrados:</legend> 
+				<div>
+					<table style="width:100%" id='table'>
+						<tr>
+						<th>Codigo</th>
+						<th>Producto</th>
+						<th>Categoria</th>
+						<th>Ubicacion</th>
+						<th>Precio</th>
+						<th>Vencimiento</th>
+						</tr>
+						{% for item in stock %}
+						<tr>
+						<td>{{item.Codigo}}</td>
+						<td>{{item.Producto}}</td>
+						<td>{{item.Categoria}}</td>
+						<td>{{item.Ubicacion}}</td>
+						<td>{{item.Precio}}</td>
+						<td>{{item.Vencimiento}}</td>
+						</tr>
+						{% endfor %}
+					</table>
+					
+				</div>
+			</fieldset>
+		</div>
+		<!--
+		<script>
+			document.getElementById("consumir").onsubmit = function(e) {
+                e.preventDefault();
+                fetch('/consumir_producto', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        'cantidad': document.getElementById('cantidad').value,
+						'producto': document.getElementById('producto').value
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+				}).then(function(response){
+                    console.log('respuesta: ', response)
+                    return response.json()
+                }).then(function(jsonResponse) {
+					console.log("jsonResponse: ", jsonResponse)
+					if (jsonResponse['error']===false){
+                        const item = document.getElementById('table')
+                        item.remove()
+					}else{
+						const message = jsonResponse['error_message']
+                    	document.getElementById('error').className = ''
+                    	document.getElementById('error').innerHTML = message
+					}
+					}).catch(function(error){
+						console.log("error: "+error)
+						document.getElementById('error').className=''
+					});
+          		}
+		</script>
+	-->
 	</body>
 </html>

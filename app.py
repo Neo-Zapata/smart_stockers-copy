@@ -1,10 +1,11 @@
 from operator import le
-from flask import Flask, render_template, url_for, request, redirect,session
+from flask import Flask, render_template, url_for, request, redirect, session, jsonify
 from flask.helpers import flash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import and_, not_, or_
 from flask_migrate import Migrate
-
+import sys
+import json
 
 
 app = Flask(__name__)
@@ -19,18 +20,16 @@ class Productos(db.Model):
     __tablename__ = 'productos'
     id_productos = db.Column(db.Integer, primary_key=True)
     id_usuario = db.Column(db.Integer)
-    # Codigo es unique LISTO
     Codigo = db.Column(db.Integer, nullable=False, unique=True)
     Producto = db.Column(db.String(50), nullable=False)
     Categoria = db.Column(db.String(30), nullable=False)
     Ubicacion = db.Column(db.String(60), nullable=False)
     Precio = db.Column(db.Float, nullable=False)
     Vencimiento = db.Column(db.Date, nullable=False)
-#Como es id es foreign key??
+
 class Cuentas(db.Model):
     __tablename__ = 'cuentas'
     id_cuentas = db.Column(db.Integer, primary_key=True)
-       # Los tres deben ser unique
     email = db.Column(db.String(40), nullable=False, unique=True)
     username = db.Column(db.String(30), nullable=False, unique=True)
     password = db.Column(db.String(30), nullable=False, unique=True)
@@ -43,67 +42,6 @@ class Cuentas(db.Model):
 def index():
     return render_template('index.html')
 
-@app.route('/home')
-def home():
-    if 'loggedin' in session:
-        user = session['username']
-        flash(f"welcome {user}","info")
-        return render_template('home.html')
-    
-    return redirect(url_for('index'))
-#1.1
-@app.route('/registro')
-def register():
-    return render_template('register.html')
-
-@app.route('/agregar')
-def agregar():
-    if 'loggedin' in session:
-        username = session['username']
-        flash(f"Your are logged as: {username}","info")
-        return render_template('agregar.html')
-    
-    return redirect(url_for('index'))
-    
-
-@app.route('/consumir')
-def consumir():
-    if 'loggedin' in session:
-        username = session['username']
-        flash(f"Your are logged as: {username}","info")
-        return render_template('consumir.html')
-    
-    return redirect(url_for('index'))
-    
-
-@app.route('/stock')
-def stock():
-    if 'loggedin' in session:
-        username = session['username']
-        flash(f"Your are logged as: {username}","info")
-        return render_template('stock.html', stock=Productos.query.filter_by(id_usuario=str(session['id'])))
-    
-    return redirect(url_for('index'))
-    
-
-@app.route('/agregar_producto', methods=['POST'])
-def agregar_producto():
-    #El id_usuario podria asignarse como foreign key (y pasar otros parametros al session)
-    id_usuario = session['id']
-    cantidad = int(request.form.get('cantidad',''))
-    codigo = request.form.get('codigo','')
-    producto = request.form.get('producto','')
-    categoria = request.form.get('categoria','')
-    ubicacion = request.form.get('ubicacion','')
-    precio = request.form.get('precio','')
-    vencimiento = request.form.get('vencimiento','')
-
-    for i in range(cantidad):
-        _productos = Productos(id_usuario=id_usuario,Codigo=codigo,Producto=producto,Categoria=categoria,Ubicacion=ubicacion,Precio=precio,Vencimiento=vencimiento)
-        db.session.add(_productos)
-        db.session.commit()
-    # poner mensaje para que el usuario sepa que fue exitoso
-    return redirect(url_for('agregar'))
 #1.2
 @app.route('/signin', methods=['POST'])
 def signin():
@@ -151,13 +89,99 @@ def logout():
         return redirect(url_for('index'))
     return redirect(url_for('index'))
 
+#1.1
+@app.route('/registro')
+def register():
+    return render_template('register.html')
+
+#-----------------
+
+@app.route('/home')
+def home():
+    if 'loggedin' in session:
+        user = session['username']
+        flash(f"welcome {user}","info")
+        return render_template('home.html')
+    
+    return redirect(url_for('index'))
+
+@app.route('/agregar')
+def agregar():
+    if 'loggedin' in session:
+        username = session['username']
+        flash(f"Your are logged as: {username}","info")
+        return render_template('agregar.html', stock=Productos.query.filter_by(id_usuario=str(session['id'])))
+    
+    return redirect(url_for('index'))
+    
+
+@app.route('/consumir')
+def consumir():
+    if 'loggedin' in session:
+        username = session['username']
+        flash(f"Your are logged as: {username}","info")
+        return render_template('consumir.html', stock=Productos.query.filter_by(id_usuario=str(session['id'])))
+    
+    return redirect(url_for('index'))
+    
+
+@app.route('/stock')
+def stock():
+    if 'loggedin' in session:
+        username = session['username']
+        flash(f"Your are logged as: {username}","info")
+        return render_template('stock.html', stock=Productos.query.filter_by(id_usuario=str(session['id'])))
+    
+    return redirect(url_for('index'))
+    
+
+@app.route('/agregar_producto', methods=['POST'])
+def agregar_producto():
+    response = {}
+    error = False
+    try:
+        id_usuario = session['id']
+        cantidad = request.get_json()['cantidad']
+        codigo = request.get_json()['codigo']
+        producto = request.get_json()['producto']
+        categoria = request.get_json()['categoria']
+        ubicacion = request.get_json()['ubicacion']
+        precio = request.get_json()['precio']
+        vencimiento = request.get_json()['vencimiento']
+
+        for i in range(int(cantidad)):
+            _productos = Productos(id_usuario=id_usuario,Codigo=codigo,Producto=producto,Categoria=categoria,Ubicacion=ubicacion,Precio=precio,Vencimiento=vencimiento)
+           # _productos = Productos(None)
+            db.session.add(_productos)
+            db.session.commit()
+        
+        response['cantidad']=int(cantidad)
+        response['codigo']=_productos.Codigo
+        response['producto']=_productos.Producto
+        response['categoria']=_productos.Categoria
+        response['ubicacion']=_productos.Ubicacion
+        response['precio']=_productos.Precio
+        response['vencimiento']=_productos.Vencimiento
+        
+    except:
+        error = True
+        db.session.rollback()
+        print(sys.exc_info())
+    finally:
+        db.session.close()
+
+    if error:
+        response['error_message'] = 'Algo salio mal en el servidor!'
+    response['error'] = error
+    return jsonify(response)
+
 @app.route('/consumir_producto', methods=['POST'])
 def consumir_producto():
     _searchProd = request.form.get('producto','')
    # _searchVenc = request.form.get('vencimiento','')
     _deleteCant = int(request.form.get('cantidad',''))
 
-    results = Productos.query.filter_by(Producto=_searchProd )#Vencimiento=_searchVenc
+    results = Productos.query.filter_by(Producto=_searchProd, id_usuario=str(session['id']))#Vencimiento=_searchVenc
     cant=0
     for x in results:
         cant= cant+1

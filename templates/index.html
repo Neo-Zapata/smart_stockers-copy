@@ -2,36 +2,30 @@
     <head>
 <!--    <link rel="stylesheet" href="{{ url_for('static',filename='styles/stylesheet2.css') }}">
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap">
--->
+
         <link rel="stylesheet" href="{{ url_for('static',filename='styles/menu.css') }}">
         <link rel="preconnect" href="https://fonts.gstatic.com">
         <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
-
+-->
     </head>
     <body>
         <!-- ICONOS
         <img src="../static/img/verstock.png">
         <img src="../static/img/consumir.png">
-        <img src="../static/img/agregar.png">
-        -->
-        <!--Los div son para los styles de CSS-->
+        <img src="../static/img/agregar.png"> -->
         <div class="seri">
             <div class="noma">
                 <form action="/signin" method="POST">
                     <div class="perri">
-                        <!--EL for del label es para hacer un bound y, se introduce el id (el cual no hay)-->
                         <label for="e-mail">E-mail: </label> 
                         <input id="e-mail" name="mail" type="email"/>
                     </div>
-                     
                     <div class="perri">
                         <label for="password">Contraseña: </label>	
                         <input id="password" name="password" type="text" /> 
                     </div>
-                    
                     <div class="perri">
                         <input type="submit" value="Submit"/>
-                        <!--Title es el nombre cuando el cursor esta por encima-->
                         <a title="Registrarse" href="/registro">Registrate</a>
                     </div>
                 </form>

@@ -6,6 +6,14 @@
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap">
 		<link rel="stylesheet" href="{{ url_for('static',filename='styles/menu.css')}}">
 -->
+	<style>
+	table, th, td {
+	border: 1px solid black;
+	}
+	.hidden {
+		display:none;
+	}
+	</style>
 	</head>
 	<body>
 		<header>
@@ -34,40 +42,124 @@
 				{% endif %}
 			{% endwith %}
 		</div>
+
 		<h1>Agregar Producto</h1>
 		<div class="rec">
 			<fieldset>
 				<legend>Agregar producto: </legend> 
-				<form action="/agregar_producto" method="POST">
+		<!--    <form action="/agregar_producto" method="POST"> -->
+				<form id="agregar">
 					<div class="soul">
 						<label for="cantidad">Cantidad*</label>	
-						<input name="cantidad" type="text"/> 
+						<input id="cantidad" name="cantidad" type="text"/> 
 					
 						<label for="codigo">Codigo*</label> 
-						<input name="codigo" type="text"/> 
+						<input id="codigo" name="codigo" type="text"/> 
 					
 						<label for="producto">Producto*</label>	
-						<input name="producto" type="text" /> 
+						<input id="producto" name="producto" type="text" /> 
 					</div>
 					<div class="soul">
 						<label for="categoria">Categoria*</label>
-						<input name="categoria" type="text"/> 
+						<input id="categoria" name="categoria" type="text"/> 
 					
 						<label for="ubicacion">Ubicacion*</label>
-						<input name="ubicacion" type="text" /> 
+						<input id="ubicacion" name="ubicacion" type="text" /> 
 					
 						<label for="precio">Precio*</label>
-						<input name="precio" type="text" /> 
+						<input id="precio" name="precio" type="text" /> 
 					</div>
 					<div class="soul">
 						<label for="vencimiento">Vencimiento*</label>
-						<input name="vencimiento" type="date"/> 
+						<input id="vencimiento" name="vencimiento" type="date"/> 
 					</div>
 		
 					<input type="submit" value="Submit"/>
 				</form>
 			</fieldset>
 		</div>
+		<div id='error' class="hidden" style="color:red;size:10in">Algo salio mal en el servidor!</div>
+		<div>
+			<fieldset>
+				<legend>Todos los items registrados:</legend> 
+				<div>
+					<table style="width:100%" id="table">
+						<tr>
+						  <th>Codigo</th>
+						  <th>Producto</th>
+						  <th>Categoria</th>
+						  <th>Ubicacion</th>
+						  <th>Precio</th>
+						  <th>Vencimiento</th>
+						</tr>
+						{% for item in stock %}
+						<tr>
+						  <td>{{item.Codigo}}</td>
+						  <td>{{item.Producto}}</td>
+						  <td>{{item.Categoria}}</td>
+						  <td>{{item.Ubicacion}}</td>
+						  <td>{{item.Precio}}</td>
+						  <td>{{item.Vencimiento}}</td>
+						</tr>
+						{% endfor %}
+					  </table>
+					  
+				</div>
+			</fieldset>
+		</div>
+
+		<script>
+			document.getElementById("agregar").onsubmit = function(e) {
+                e.preventDefault();
+                fetch('/agregar_producto', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        'cantidad': document.getElementById('cantidad').value,
+						'codigo': document.getElementById('codigo').value,
+						'producto': document.getElementById('producto').value,
+						'categoria': document.getElementById('categoria').value,
+						'ubicacion': document.getElementById('ubicacion').value,
+						'precio': document.getElementById('precio').value,
+						'vencimiento': document.getElementById('vencimiento').value
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }).then(function(response){
+                    console.log('respuesta: ', response)
+                    return response.json()
+                }).then(function(jsonResponse) {
+                    console.log("jsonResponse: ", jsonResponse)
+					if (jsonResponse['error']===false){
+					for (var i=0; i<jsonResponse['cantidad'];i++){
+					const trItem=document.createElement('tr')
+
+					const tdItem1=trItem.appendChild(document.createElement('td'))
+					const tdItem2=trItem.appendChild(document.createElement('td'))
+					const tdItem3=trItem.appendChild(document.createElement('td'))
+					const tdItem4=trItem.appendChild(document.createElement('td'))
+					const tdItem5=trItem.appendChild(document.createElement('td'))
+					const tdItem6=trItem.appendChild(document.createElement('td'))
+					tdItem1.innerHTML=jsonResponse['codigo']
+					tdItem2.innerHTML=jsonResponse['producto']
+					tdItem3.innerHTML=jsonResponse['categoria']
+					tdItem4.innerHTML=jsonResponse['ubicacion']
+					tdItem5.innerHTML=jsonResponse['precio']
+					tdItem6.innerHTML=jsonResponse['vencimiento']
+					document.getElementById('table').appendChild(trItem)
+					}
+					document.getElementById('error').className='hidden'
+				}else{
+					const message = jsonResponse['error_message']
+                    document.getElementById('error').className = ''
+                    document.getElementById('error').innerHTML = message
+				}
+				}).catch(function(error){
+					console.log("error: "+error)
+					document.getElementById('error').className=''
+				});
+            }
+		</script>
 
 	</body>
 </html>
