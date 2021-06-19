@@ -21,7 +21,7 @@ El software consiste en la venta de una herramienta para que el usuario pueda ej
 ### Visión 👀
  
  
-Que el usuario pueda también tener una aplicación en su celular que pueda escanear códigos de barras y tomar fotografía a los productos para que sea más fácil de utilizar la herramienta.
+Que los usuarios actuales den feedback para complementar la herramienta y mejorar posibles errores para tener más usuarios.
  
  
  
