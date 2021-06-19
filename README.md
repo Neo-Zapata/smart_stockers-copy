@@ -24,7 +24,7 @@ Nuestra vision es dejar de lado el papel y que todo el mundo pueda tener acceso 
 
 ### Diagrama
 
-![Smart Stocking screenshot](images/diagrama.png)
+![Smart Stocking screenshot](images/diagrama01.png)
  
 ## Tecnologias utilizadas 🛠️⚙️
  
