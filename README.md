@@ -16,14 +16,11 @@ El proyecto tiene como objetivo facilitar a los usuarios a que tengan el control
 ### Misión  📃
  
  
-El software consiste en la venta de una herramienta para que el usuario pueda ejecutarla en una computadora en desuso como un servidor local y que pueda acceder mediante una página web. 
+Nuestra misión es ofrecer un servicio de stocking para el hogar. Esta herramienta facilitara el facil acceso a una base de datos donde se estaran almacenando todos los productos que el cliente quiera agregar. Cabe resaltar que nuestro software tambien hace la visualizacion masiva de productos muy eficaz y amigable al usuario.
  
 ### Visión 👀
  
- 
-Que los usuarios actuales den feedback para complementar la herramienta y mejorar posibles errores para tener más usuarios.
- 
- 
+Nuestra vision es dejar de lado el papel y que todo el mundo pueda tener acceso a una herramienta sencilla para organizar objetos del hogar.
  
 ## Tecnologias utilizadas 🛠️⚙️
  
@@ -38,7 +35,7 @@ Que los usuarios actuales den feedback para complementar la herramienta y mejora
  
 ## Despliegue 💨
  
-Ejecutar el archivo [Proyecto.py](https://github.com/Neo-Zapata/smart_stockers-copy/blob/master/proyecto.py).
+Ejecutar el archivo [app.py](https://github.com/Neo-Zapata/smart_stockers-copy/blob/master/app.py)
  
  
 ## Versionado 🗂️
