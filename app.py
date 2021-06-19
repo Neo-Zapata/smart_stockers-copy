@@ -124,7 +124,7 @@ def consumir():
     
     return redirect(url_for('index'))
     
-
+'''
 @app.route('/stock')
 def stock():
     if 'loggedin' in session:
@@ -133,7 +133,7 @@ def stock():
         return render_template('stock.html', stock=Productos.query.filter_by(id_usuario=str(session['id'])))
     
     return redirect(url_for('index'))
-    
+'''
 
 @app.route('/agregar_producto', methods=['POST'])
 def agregar_producto():
@@ -193,7 +193,7 @@ def consumir_producto():
         return render_template("Error.html")
 
     return redirect(url_for('consumir'))
-
+'''
 @app.route('/mostrar_stock', methods=['POST'])
 def mostrar_stock():
     _searchCodigo = request.form.get('ver_producto','')
@@ -201,7 +201,7 @@ def mostrar_stock():
     _searchCatego = request.form.get('ver_categoria','')
     _searchUbicac = request.form.get('ver_ubicacion','')
     _searchPrecio = request.form.get('ver_precio','')
-    _searchVencim = request.form.get('ver_vencimiento','')
+    #_searchVencim = request.form.get('ver_vencimiento','')
 
     if (_searchCodigo == ""):
         _searchCodigo = '%'
@@ -213,19 +213,19 @@ def mostrar_stock():
         _searchUbicac = '%'
     if (_searchPrecio == ""):
         _searchPrecio = '%'
-    if (_searchVencim == ""):
-        _searchVencim = '%'
+   # if (_searchVencim == ""):
+   #     _searchVencim = '%'
 #revisar esta parte, falla
     resultados = Productos.query.filter(Productos.Codigo==_searchCodigo, 
                                     Productos.Producto==_searchProduc, 
                                     Productos.Categoria==_searchCatego,
                                     Productos.Ubicacion==_searchUbicac, 
                                     Productos.Precio==_searchPrecio,
-                                    Productos.Vencimiento==_searchVencim,
+                                  #  Productos.Vencimiento==_searchVencim,
                                     Productos.id_usuario == session['id'])
 
     return render_template('stock.html', stockFiltered=resultados, stock=Productos.query.filter_by(id_usuario=str(session['id'])))
-
+'''
 # hay otras maneras de manejar errores (para que el usuario pueda seguir interactuando
 @app.errorhandler(IndexError)
 def _indexError(err):
