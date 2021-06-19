@@ -29,18 +29,20 @@ Que el usuario pueda también tener una aplicación en su celular que pueda esca
  
 * [SQLAlchemy](https://www.sqlalchemy.org/) - ORM Utilizado
 * [Flask](https://flask.palletsprojects.com/en/2.0.x/) - Descripcion
- 
- 
- 
+* [Python](https://www.python.org/) - Lenguaje de programacion utilizado
+* [HTML](https://devdocs.io/html/) - Markup Language utilizado
+* [CSS](https://developer.mozilla.org/es/docs/Web/CSS) - Lenguaje de estilos utilizado
+
+
  
  
 ## Despliegue 💨
  
-Ejecutar el archivo [proyecto.py](https://github.com/Neo-Zapata/smart_stockers-copy/blob/master/proyecto.py).
+Ejecutar el archivo [Proyecto.py](https://github.com/Neo-Zapata/smart_stockers-copy/blob/master/proyecto.py).
  
  
 ## Versionado 🗂️
  
-Usamos [Flask Migrate](https://flask-migrate.readthedocs.io/en/latest/) para el versionado. Para todas las versiones disponibles, mira las [versiones en este repositorio](https://github.com/Neo-Zapata/smart_stockers-copy/tree/master/migrations/versions).
+Usamos [Flask Migrate](https://flask-migrate.readthedocs.io/en/latest/) para el versionado. Para todas las versiones disponibles, mira las [Versiones en este repositorio](https://github.com/Neo-Zapata/smart_stockers-copy/tree/master/migrations/versions).
  
 
