@@ -21,6 +21,10 @@ Nuestra misión es ofrecer un servicio de stocking para el hogar. Esta herramien
 ### Visión 👀
  
 Nuestra vision es dejar de lado el papel y que todo el mundo pueda tener acceso a una herramienta sencilla para organizar objetos del hogar.
+
+### Diagrama
+
+![Smart Stocking screenshot](images/diagrama.png)
  
 ## Tecnologias utilizadas 🛠️⚙️
  
