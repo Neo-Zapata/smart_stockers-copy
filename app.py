@@ -6,7 +6,10 @@ from sqlalchemy import and_, not_, or_
 from flask_migrate import Migrate
 import sys
 import json
+#NUEVO IMPORT PARA HASHEAR
+import bcrypt
 
+# PARA USAR EL HASH VE: https://github.com/Vuka951/tutorial-code/blob/master/flask-bcrypt/main.py
 
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
@@ -14,18 +17,21 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root@localhost/smartsto
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
-migrate = Migrate(app, db) #inicializar la migracion
+migrate = Migrate(app, db) 
 
 class Productos(db.Model):
     __tablename__ = 'productos'
     id_productos = db.Column(db.Integer, primary_key=True)
-    id_usuario = db.Column(db.Integer)
-    Codigo = db.Column(db.Integer, nullable=False, unique=True)
+    Codigo = db.Column(db.Integer, nullable=False)
     Producto = db.Column(db.String(50), nullable=False)
     Categoria = db.Column(db.String(30), nullable=False)
     Ubicacion = db.Column(db.String(60), nullable=False)
     Precio = db.Column(db.Float, nullable=False)
     Vencimiento = db.Column(db.Date, nullable=False)
+
+    # FOREIGN KEY, 'user' ES POR EL BACKREF DE LINEA 41
+    #user (ES COMO SU HUBIERA UNA COLUMAN EXTRA LLAMADA user)
+    id_usuario = db.Column(db.Integer, db.ForeignKey('cuentas.id_cuentas'), nullable=False)
 
 class Cuentas(db.Model):
     __tablename__ = 'cuentas'
@@ -34,15 +40,15 @@ class Cuentas(db.Model):
     username = db.Column(db.String(30), nullable=False, unique=True)
     password = db.Column(db.String(30), nullable=False, unique=True)
 
+    #DB.RELATIONSHIP
+    productos = db.relationship("Productos", backref="user")
 
-#db.create_all()
+db.create_all()
 
-#1
 @app.route('/')
 def index():
     return render_template('index.html')
 
-#1.2
 @app.route('/signin', methods=['POST'])
 def signin():
     _mail = request.form.get('mail')
@@ -57,7 +63,6 @@ def signin():
         session['username'] = results.first().username
         return redirect(url_for('home'))
     
-#1.1.2
 @app.route('/signup', methods=['POST'])
 def signup():
     _username = request.form.get('username')
@@ -78,7 +83,6 @@ def signup():
     flash("Uno o mas campos ya estan registrados!","info")
     return redirect(url_for("register"))
             
-#1.2.1
 @app.route('/logout')
 def logout():
     if 'loggedin' in session:
@@ -89,12 +93,9 @@ def logout():
         return redirect(url_for('index'))
     return redirect(url_for('index'))
 
-#1.1
 @app.route('/registro')
 def register():
     return render_template('register.html')
-
-#-----------------
 
 @app.route('/home')
 def home():
@@ -114,7 +115,6 @@ def agregar():
     
     return redirect(url_for('index'))
     
-
 @app.route('/consumir')
 def consumir():
     if 'loggedin' in session:
@@ -123,24 +123,16 @@ def consumir():
         return render_template('consumir.html', stock=Productos.query.filter_by(id_usuario=str(session['id'])))
     
     return redirect(url_for('index'))
-    
-'''
-@app.route('/stock')
-def stock():
-    if 'loggedin' in session:
-        username = session['username']
-        flash(f"Your are logged as: {username}","info")
-        return render_template('stock.html', stock=Productos.query.filter_by(id_usuario=str(session['id'])))
-    
-    return redirect(url_for('index'))
-'''
 
 @app.route('/agregar_producto', methods=['POST'])
 def agregar_producto():
     response = {}
     error = False
     try:
+        #ASIGNAMOS UN OBJETO DE TIPO CUENTAS
         id_usuario = session['id']
+        usuario = Cuentas.query.filter_by(id_cuentas=id_usuario).first()
+        
         cantidad = request.get_json()['cantidad']
         codigo = request.get_json()['codigo']
         producto = request.get_json()['producto']
@@ -150,8 +142,9 @@ def agregar_producto():
         vencimiento = request.get_json()['vencimiento']
 
         for i in range(int(cantidad)):
-            _productos = Productos(id_usuario=id_usuario,Codigo=codigo,Producto=producto,Categoria=categoria,Ubicacion=ubicacion,Precio=precio,Vencimiento=vencimiento)
-           # _productos = Productos(None)
+            #ASIGNAMOS A USER EL OBJETO DE TIPO CUENTAS PARA LA RELACION
+            _productos = Productos(Codigo=codigo,Producto=producto,Categoria=categoria,Ubicacion=ubicacion,
+                                    Precio=precio,Vencimiento=vencimiento, user=usuario) 
             db.session.add(_productos)
             db.session.commit()
         
@@ -162,14 +155,12 @@ def agregar_producto():
         response['ubicacion']=_productos.Ubicacion
         response['precio']=_productos.Precio
         response['vencimiento']=_productos.Vencimiento
-        
     except:
         error = True
         db.session.rollback()
         print(sys.exc_info())
     finally:
         db.session.close()
-
     if error:
         response['error_message'] = 'Algo salio mal en el servidor!'
     response['error'] = error
@@ -178,55 +169,24 @@ def agregar_producto():
 @app.route('/consumir_producto', methods=['POST'])
 def consumir_producto():
     _searchProd = request.form.get('producto','')
-   # _searchVenc = request.form.get('vencimiento','')
     _deleteCant = int(request.form.get('cantidad',''))
 
-    results = Productos.query.filter_by(Producto=_searchProd, id_usuario=str(session['id']))#Vencimiento=_searchVenc
+    #AQUI ESTA EL POTENCIAL ERROR
+    usuario = Cuentas.query.filter_by(id_cuentas=session["id"]).first()
+    results = Productos.query.filter_by(Producto=_searchProd, user=usuario)
+
     cant=0
     for x in results:
-        cant= cant+1
-    if _deleteCant < cant:
-        for i in range(_deleteCant):
-            db.session.delete(results[i])
+        cant += 1
+    if _deleteCant <= cant:
+        for w in range(_deleteCant):
+            db.session.delete(results[w])
             db.session.commit()
     else:
         return render_template("Error.html")
 
     return redirect(url_for('consumir'))
-'''
-@app.route('/mostrar_stock', methods=['POST'])
-def mostrar_stock():
-    _searchCodigo = request.form.get('ver_producto','')
-    _searchProduc = request.form.get('ver_vencimiento','')
-    _searchCatego = request.form.get('ver_categoria','')
-    _searchUbicac = request.form.get('ver_ubicacion','')
-    _searchPrecio = request.form.get('ver_precio','')
-    #_searchVencim = request.form.get('ver_vencimiento','')
 
-    if (_searchCodigo == ""):
-        _searchCodigo = '%'
-    if (_searchProduc == ""):
-        _searchProduc = '%'
-    if (_searchCatego == ""):
-        _searchCatego = '%'
-    if (_searchUbicac == ""):
-        _searchUbicac = '%'
-    if (_searchPrecio == ""):
-        _searchPrecio = '%'
-   # if (_searchVencim == ""):
-   #     _searchVencim = '%'
-#revisar esta parte, falla
-    resultados = Productos.query.filter(Productos.Codigo==_searchCodigo, 
-                                    Productos.Producto==_searchProduc, 
-                                    Productos.Categoria==_searchCatego,
-                                    Productos.Ubicacion==_searchUbicac, 
-                                    Productos.Precio==_searchPrecio,
-                                  #  Productos.Vencimiento==_searchVencim,
-                                    Productos.id_usuario == session['id'])
-
-    return render_template('stock.html', stockFiltered=resultados, stock=Productos.query.filter_by(id_usuario=str(session['id'])))
-'''
-# hay otras maneras de manejar errores (para que el usuario pueda seguir interactuando
 @app.errorhandler(IndexError)
 def _indexError(err):
     return render_template("Error.html",err = err)
@@ -235,8 +195,5 @@ def _valueError(err):
     return render_template("Error.html",err = err)
 
 
-
 if __name__ == "__main__":
     app.run(host='127.0.0.1', port=8085 ,debug=True)
-
-    # THIS IS A TEST
