@@ -180,10 +180,6 @@ def consumir_producto():
     usuario = Cuentas.query.filter_by(id_cuentas=session["id"]).first()
     results = Productos.query.filter_by(Producto=_searchProd, user=usuario)
 
-    print('################################')
-    print(results.count(), " ", type(results.count()))
-    print(_deleteCant, " ", type(_deleteCant))
-    print('################################')
 
     idlist= []
     if _deleteCant <= results.count() and _deleteCant >= 0:
