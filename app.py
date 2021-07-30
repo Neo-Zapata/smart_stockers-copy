@@ -22,7 +22,9 @@ migrate = Migrate(app, db)
 
 class Productos(db.Model):
     __tablename__ = 'productos'
-    id_productos = db.Column(db.Integer, primary_key=True)
+    # Se hizo el cambio de db.Integer a db.BigInteger probar!
+    # id_productos = db.Column(db.BigInteger, primary_key=True)
+    id_productos = db.Column(db.BigInteger, primary_key=True)
     Codigo = db.Column(db.Integer, nullable=False)
     Producto = db.Column(db.String(50), nullable=False)
     Categoria = db.Column(db.String(30), nullable=False)
