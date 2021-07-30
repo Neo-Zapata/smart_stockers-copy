@@ -61,18 +61,21 @@
 			</fieldset>
 		</div>
 		<div>
-			<fieldset>
+			<fieldset style="border-style: none; margin-top: 30px;">
 				<legend>Todos los items registrados:</legend> 
 				<div>
 					<table style="width:100%" id='table'>
-						<tr>
-						<th>Codigo</th>
-						<th>Producto</th>
-						<th>Categoria</th>
-						<th>Ubicacion</th>
-						<th>Precio</th>
-						<th>Vencimiento</th>
-						</tr>
+						<tbody style="background: rgba(128, 255, 0, 0.3); border: 1px solid rgba(100, 200, 0, 0.3); border-style: none; column-rule-style: none;">
+							<tr>
+								<th>Codigo</th>
+								<th>Producto</th>
+								<th>Categoria</th>
+								<th>Ubicacion</th>
+								<th>Precio</th>
+								<th>Vencimiento</th>
+							</tr>
+						</tbody>
+						
 						{% for item in stock %}
 						<tr>
 						<td>{{item.Codigo}}</td>

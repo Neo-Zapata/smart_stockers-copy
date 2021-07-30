@@ -1,18 +1,19 @@
 from operator import le
+import re
 from flask import Flask, render_template, url_for, request, redirect, session, jsonify
 from flask.helpers import flash
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import and_, not_, or_
+from sqlalchemy import and_, not_, or_, delete,select,update,values
 from flask_migrate import Migrate
 import sys
 import json
-#NUEVO IMPORT PARA HASHEAR
 import bcrypt
 
 # PARA USAR EL HASH VE: https://github.com/Vuka951/tutorial-code/blob/master/flask-bcrypt/main.py
 
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root@localhost/smartstockers'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -38,7 +39,7 @@ class Cuentas(db.Model):
     id_cuentas = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(40), nullable=False, unique=True)
     username = db.Column(db.String(30), nullable=False, unique=True)
-    password = db.Column(db.String(30), nullable=False, unique=True)
+    password = db.Column(db.String(500), nullable=False, unique=True)
 
     #DB.RELATIONSHIP
     productos = db.relationship("Productos", backref="user")
@@ -52,21 +53,27 @@ def index():
 @app.route('/signin', methods=['POST'])
 def signin():
     _mail = request.form.get('mail')
-    _password = request.form.get('password')
-    results = Cuentas.query.filter_by(email=_mail,password=_password)
+    _password = request.form.get('password').encode('utf-8')
+    results = Cuentas.query.filter_by(email=_mail)
     if(results.count() == 0):
-        flash("Uno de los campos es vacio o es erroneo!","info")
+        flash("Alguno(s) de los campos es vacio(s) o es erroneo(s)!","info")
         return redirect(url_for('index'))
     else:
-        session['loggedin'] = True
-        session['id'] = results.first().id_cuentas
-        session['username'] = results.first().username
-        return redirect(url_for('home'))
+        if bcrypt.checkpw(_password, results.first().password.encode('utf-8')):
+            session['loggedin'] = True
+            session['id'] = results.first().id_cuentas
+            session['username'] = results.first().username
+            return redirect(url_for('home'))
+        else:
+            flash("Uno de los campos es vacio o es erroneo!","info")
+            return redirect(url_for('index'))
+        
     
 @app.route('/signup', methods=['POST'])
 def signup():
     _username = request.form.get('username')
-    _password = request.form.get('password')
+    _password = request.form.get('password').encode('utf-8')
+    _password = bcrypt.hashpw(_password,bcrypt.gensalt()).decode('utf-8')
     _mail = request.form.get('mail')
     prueba1=Cuentas.query.filter_by(email=_mail)
     prueba2=Cuentas.query.filter_by(username=_username)
@@ -101,7 +108,7 @@ def register():
 def home():
     if 'loggedin' in session:
         user = session['username']
-        flash(f"welcome {user}","info")
+        flash(f"Bienvenido {user}","info")
         return render_template('home.html')
     
     return redirect(url_for('index'))
@@ -110,7 +117,7 @@ def home():
 def agregar():
     if 'loggedin' in session:
         username = session['username']
-        flash(f"Your are logged as: {username}","info")
+        flash(f" Has iniciado sesion como: {username}","info")
         return render_template('agregar.html', stock=Productos.query.filter_by(id_usuario=str(session['id'])))
     
     return redirect(url_for('index'))
@@ -132,7 +139,6 @@ def agregar_producto():
         #ASIGNAMOS UN OBJETO DE TIPO CUENTAS
         id_usuario = session['id']
         usuario = Cuentas.query.filter_by(id_cuentas=id_usuario).first()
-        
         cantidad = request.get_json()['cantidad']
         codigo = request.get_json()['codigo']
         producto = request.get_json()['producto']
@@ -171,19 +177,27 @@ def consumir_producto():
     _searchProd = request.form.get('producto','')
     _deleteCant = int(request.form.get('cantidad',''))
 
-    #AQUI ESTA EL POTENCIAL ERROR
     usuario = Cuentas.query.filter_by(id_cuentas=session["id"]).first()
     results = Productos.query.filter_by(Producto=_searchProd, user=usuario)
 
-    cant=0
-    for x in results:
-        cant += 1
-    if _deleteCant <= cant:
+    print('################################')
+    print(results.count(), " ", type(results.count()))
+    print(_deleteCant, " ", type(_deleteCant))
+    print('################################')
+
+    idlist= []
+    if _deleteCant <= results.count() and _deleteCant >= 0:
         for w in range(_deleteCant):
-            db.session.delete(results[w])
-            db.session.commit()
+            idlist.append(int(results[w].id_productos))
     else:
         return render_template("Error.html")
+
+    
+    sql = delete(Productos).where(Productos.id_productos.in_(idlist))
+
+    db.session.execute(sql)
+    db.session.commit()
+    
 
     return redirect(url_for('consumir'))
 
