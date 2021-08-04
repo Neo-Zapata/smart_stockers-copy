@@ -49,5 +49,5 @@ Usamos [Flask Migrate](https://flask-migrate.readthedocs.io/en/latest/) para el 
 
 ## App Android
 
-
+![Android screenshot](images/screenshot.jpg)
 
