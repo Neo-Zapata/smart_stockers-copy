@@ -45,5 +45,9 @@ Ejecutar el archivo [app.py](https://github.com/Neo-Zapata/smart_stockers-copy/b
 ## Versionado 🗂️
  
 Usamos [Flask Migrate](https://flask-migrate.readthedocs.io/en/latest/) para el versionado. Para todas las versiones disponibles, mira las [Versiones en este repositorio](https://github.com/Neo-Zapata/smart_stockers-copy/tree/master/migrations/versions).
- 
+
+
+## App Android
+
+
 
